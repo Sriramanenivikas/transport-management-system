@@ -1,7 +1,0 @@
-com/tms/controller/LoadControllerIntegrationTest.class
-com/tms/service/BookingServiceTest.class
-com/tms/service/LoadServiceTest.class
-com/tms/service/TransporterServiceTest.class
-com/tms/controller/BookingFlowIntegrationTest.class
-com/tms/service/BidServiceTest.class
-com/tms/TransportManagementSystemApplicationTests.class
