@@ -25,7 +25,7 @@ A comprehensive backend system for managing transport logistics with Load, Trans
  
 
 ### Entity Relationship Diagram
-<img width="980" height="558" alt="2025-12-02_16-55-34" src="https://github.com/user-attachments/assets/63fa301f-1072-4283-951d-4eddbe0c4638" />
+ <img width="656" height="637" alt="Screenshot 2025-12-02 at 5 18 38 PM" src="https://github.com/user-attachments/assets/a5edae36-5825-4eae-8a6b-8bf27ea26d8a" />
 
 ```
 
