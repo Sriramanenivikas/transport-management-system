@@ -34,7 +34,7 @@ Key constraints:
 - Indexes on shipper_id, status, load_id, transporter_id
 - Version column for optimistic locking
 
-**Postman:** Import `TMS-Postman-Collection.json`
+**Postman Api Collection File:** Import `TMS-Postman-Collection.json`
 
 ### Endpoints (15 total)
 
