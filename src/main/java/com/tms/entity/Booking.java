@@ -33,10 +33,8 @@ public class Booking {
     @Column(name = "booked_at")
     private LocalDateTime bookedAt = LocalDateTime.now();
 
-    // Constructors
     public Booking() {}
 
-    // Getters and Setters
     public Integer getBookingId() { return bookingId; }
     public void setBookingId(Integer bookingId) { this.bookingId = bookingId; }
 

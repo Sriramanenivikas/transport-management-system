@@ -30,10 +30,8 @@ public class Bid {
     @Column(name = "submitted_at")
     private LocalDateTime submittedAt = LocalDateTime.now();
 
-    // Constructors
     public Bid() {}
 
-    // Getters and Setters
     public Integer getBidId() { return bidId; }
     public void setBidId(Integer bidId) { this.bidId = bidId; }
 

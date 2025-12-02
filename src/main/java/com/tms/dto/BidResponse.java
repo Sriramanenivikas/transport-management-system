@@ -14,7 +14,6 @@ public class BidResponse {
     private LocalDateTime submittedAt;
     private Double score;
 
-    // Getters and Setters
     public Integer getBidId() { return bidId; }
     public void setBidId(Integer bidId) { this.bidId = bidId; }
 

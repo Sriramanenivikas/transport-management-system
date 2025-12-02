@@ -32,7 +32,6 @@ public class BookingService {
 
     @Transactional
     public BookingResponse createBooking(BookingRequest request) {
-        // Get bid
         Bid bid = bidRepository.findById(request.getBidId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bid not found with ID: " + request.getBidId()));
 
@@ -40,7 +39,6 @@ public class BookingService {
             throw new InvalidStatusTransitionException("Can only accept bids with PENDING status");
         }
 
-        // Get load with optimistic locking
         Load load = loadRepository.findById(bid.getLoadId())
                 .orElseThrow(() -> new ResourceNotFoundException("Load not found"));
 
@@ -48,12 +46,10 @@ public class BookingService {
             throw new InvalidStatusTransitionException("Cannot book a cancelled load");
         }
 
-        // Validate allocated trucks don't exceed offered
         if (request.getAllocatedTrucks() > bid.getTrucksOffered()) {
             throw new InsufficientCapacityException("Cannot allocate more trucks than offered in bid");
         }
 
-        // Check remaining capacity
         Integer currentlyAllocated = bookingRepository.getTotalAllocatedTrucks(load.getLoadId());
         int remaining = load.getNoOfTrucks() - (currentlyAllocated != null ? currentlyAllocated : 0);
 
@@ -63,7 +59,6 @@ public class BookingService {
                             remaining, request.getAllocatedTrucks()));
         }
 
-        // Get transporter and validate truck capacity
         Transporter transporter = transporterRepository.findById(bid.getTransporterId())
                 .orElseThrow(() -> new ResourceNotFoundException("Transporter not found"));
 
@@ -76,11 +71,9 @@ public class BookingService {
                     String.format("Transporter only has %d trucks available", capacity.getCount()));
         }
 
-        // Deduct trucks from capacity
         capacity.setCount(capacity.getCount() - request.getAllocatedTrucks());
         truckCapacityRepository.save(capacity);
 
-        // Create booking
         Booking booking = new Booking();
         booking.setLoadId(load.getLoadId());
         booking.setBidId(bid.getBidId());
@@ -91,11 +84,9 @@ public class BookingService {
 
         booking = bookingRepository.save(booking);
 
-        // Update bid status
         bid.setStatus("ACCEPTED");
         bidRepository.save(bid);
 
-        // Update load status if fully booked
         int newAllocated = (currentlyAllocated != null ? currentlyAllocated : 0) + request.getAllocatedTrucks();
         if (newAllocated >= load.getNoOfTrucks()) {
             load.setStatus("BOOKED");
@@ -131,7 +122,6 @@ public class BookingService {
             throw new InvalidStatusTransitionException("Booking is already cancelled");
         }
 
-        // Restore truck capacity
         Load load = loadRepository.findById(booking.getLoadId()).orElseThrow();
         TruckCapacity capacity = truckCapacityRepository
                 .findByTransporterTransporterIdAndTruckType(booking.getTransporterId(), load.getTruckType())
@@ -140,11 +130,9 @@ public class BookingService {
         capacity.setCount(capacity.getCount() + booking.getAllocatedTrucks());
         truckCapacityRepository.save(capacity);
 
-        // Update booking status
         booking.setStatus("CANCELLED");
         booking = bookingRepository.save(booking);
 
-        // Update load status back to OPEN_FOR_BIDS if it was BOOKED
         if ("BOOKED".equals(load.getStatus())) {
             load.setStatus("OPEN_FOR_BIDS");
             loadRepository.save(load);

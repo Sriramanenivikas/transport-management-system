@@ -14,7 +14,6 @@ public class BookingResponse {
     private String status;
     private LocalDateTime bookedAt;
 
-    // Getters and Setters
     public Integer getBookingId() { return bookingId; }
     public void setBookingId(Integer bookingId) { this.bookingId = bookingId; }
 

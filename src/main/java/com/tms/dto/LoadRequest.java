@@ -35,7 +35,6 @@ public class LoadRequest {
     @Min(value = 1, message = "At least 1 truck required")
     private Integer noOfTrucks;
 
-    // Getters and Setters
     public String getShipperId() { return shipperId; }
     public void setShipperId(String shipperId) { this.shipperId = shipperId; }
 

@@ -48,10 +48,8 @@ public class Load {
     @Version
     private Integer version;
 
-    // Constructors
     public Load() {}
 
-    // Getters and Setters
     public Integer getLoadId() { return loadId; }
     public void setLoadId(Integer loadId) { this.loadId = loadId; }
 

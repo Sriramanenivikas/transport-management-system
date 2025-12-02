@@ -60,16 +60,12 @@ public class TransporterService {
 
     @Transactional
     public TransporterResponse updateTruckCapacity(Integer transporterId, List<TransporterRequest.TruckCapacityDTO> trucks) {
-        // Manually delete all existing truck capacities first
         truckCapacityRepository.deleteByTransporterTransporterId(transporterId);
         truckCapacityRepository.flush();
 
-        // Fetch transporter again after deletion to get fresh state
         Transporter transporter = transporterRepository.findById(transporterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Transporter not found with ID: " + transporterId));
 
-
-        // Add new truck capacities
         for (TransporterRequest.TruckCapacityDTO dto : trucks) {
             TruckCapacity tc = new TruckCapacity(dto.getTruckType(), dto.getCount());
             tc.setTransporter(transporter);

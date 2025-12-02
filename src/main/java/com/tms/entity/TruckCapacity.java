@@ -26,7 +26,6 @@ public class TruckCapacity {
     @JsonIgnore
     private Transporter transporter;
 
-    // Constructors
     public TruckCapacity() {}
 
     public TruckCapacity(String truckType, Integer count) {
@@ -34,7 +33,6 @@ public class TruckCapacity {
         this.count = count;
     }
 
-    // Getters and Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

@@ -20,7 +20,6 @@ public class LoadResponse {
     private Integer remainingTrucks;
     private List<BidResponse> bids;
 
-    // Getters and Setters
     public Integer getLoadId() { return loadId; }
     public void setLoadId(Integer loadId) { this.loadId = loadId; }
 

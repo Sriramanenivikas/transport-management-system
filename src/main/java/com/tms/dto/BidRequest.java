@@ -18,7 +18,6 @@ public class BidRequest {
     @Min(value = 1, message = "At least 1 truck must be offered")
     private Integer trucksOffered;
 
-    // Getters and Setters
     public Integer getLoadId() { return loadId; }
     public void setLoadId(Integer loadId) { this.loadId = loadId; }
 

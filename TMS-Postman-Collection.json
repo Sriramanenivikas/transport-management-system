@@ -1,0 +1,700 @@
+{
+	"info": {
+		"_postman_id": "tms-api-collection",
+		"name": "TMS - Transport Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Load APIs",
+			"item": [
+				{
+					"name": "1. Create Load",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response has loadId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.loadId).to.exist;",
+									"    pm.environment.set('loadId', jsonData.loadId);",
+									"});",
+									"pm.test('Status is POSTED', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('POSTED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"shipperId\": \"SHIP001\",\n  \"loadingCity\": \"Mumbai\",\n  \"unloadingCity\": \"Delhi\",\n  \"loadingDate\": \"2025-12-10T08:00:00\",\n  \"productType\": \"Electronics\",\n  \"weight\": 5000.0,\n  \"weightUnit\": \"KG\",\n  \"truckType\": \"CONTAINER-20FT\",\n  \"noOfTrucks\": 2\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/load",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load"]
+						}
+					}
+				},
+				{
+					"name": "2. Get All Loads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response is paginated', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.content).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/load?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						}
+					}
+				},
+				{
+					"name": "3. Get Load by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response has correct loadId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.loadId).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/load/{{loadId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load", "{{loadId}}"]
+						}
+					}
+				},
+				{
+					"name": "4. Get Best Bids",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response is array', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/load/{{loadId}}/best-bids",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load", "{{loadId}}", "best-bids"]
+						}
+					}
+				},
+				{
+					"name": "5. Cancel Load",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Status is CANCELLED', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('CANCELLED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/load/{{loadId}}/cancel",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load", "{{loadId}}", "cancel"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Transporter APIs",
+			"item": [
+				{
+					"name": "1. Create Transporter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response has transporterId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.transporterId).to.exist;",
+									"    pm.environment.set('transporterId', jsonData.transporterId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"companyName\": \"Test Logistics\",\n  \"rating\": 4.5,\n  \"availableTrucks\": [\n    {\"truckType\": \"CONTAINER-20FT\", \"count\": 10},\n    {\"truckType\": \"CONTAINER-40FT\", \"count\": 5}\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/transporter",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["transporter"]
+						}
+					}
+				},
+				{
+					"name": "2. Get Transporter by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response has transporterId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.transporterId).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transporter/{{transporterId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["transporter", "{{transporterId}}"]
+						}
+					}
+				},
+				{
+					"name": "3. Update Truck Capacity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\"truckType\": \"CONTAINER-20FT\", \"count\": 15},\n  {\"truckType\": \"CONTAINER-40FT\", \"count\": 10}\n]"
+						},
+						"url": {
+							"raw": "http://localhost:8080/transporter/{{transporterId}}/trucks",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["transporter", "{{transporterId}}", "trucks"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Bid APIs",
+			"item": [
+				{
+					"name": "0. Create Load for Bid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set('bidLoadId', jsonData.loadId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"shipperId\": \"SHIP002\",\n  \"loadingCity\": \"Chennai\",\n  \"unloadingCity\": \"Bangalore\",\n  \"loadingDate\": \"2025-12-15T08:00:00\",\n  \"productType\": \"Textiles\",\n  \"weight\": 3000.0,\n  \"weightUnit\": \"KG\",\n  \"truckType\": \"CONTAINER-20FT\",\n  \"noOfTrucks\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/load",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load"]
+						}
+					}
+				},
+				{
+					"name": "1. Create Bid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response has bidId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.bidId).to.exist;",
+									"    pm.environment.set('bidId', jsonData.bidId);",
+									"});",
+									"pm.test('Status is PENDING', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('PENDING');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loadId\": {{bidLoadId}},\n  \"transporterId\": {{transporterId}},\n  \"proposedRate\": 45000.0,\n  \"trucksOffered\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/bid",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["bid"]
+						}
+					}
+				},
+				{
+					"name": "2. Get All Bids",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response is array', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bid",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["bid"]
+						}
+					}
+				},
+				{
+					"name": "3. Get Bid by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response has bidId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.bidId).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bid/{{bidId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["bid", "{{bidId}}"]
+						}
+					}
+				},
+				{
+					"name": "4. Reject Bid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Status is REJECTED', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('REJECTED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bid/{{bidId}}/reject",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["bid", "{{bidId}}", "reject"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Booking APIs",
+			"item": [
+				{
+					"name": "0. Create Load for Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set('bookingLoadId', jsonData.loadId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"shipperId\": \"SHIP003\",\n  \"loadingCity\": \"Delhi\",\n  \"unloadingCity\": \"Kolkata\",\n  \"loadingDate\": \"2025-12-20T08:00:00\",\n  \"productType\": \"Machinery\",\n  \"weight\": 8000.0,\n  \"weightUnit\": \"KG\",\n  \"truckType\": \"CONTAINER-20FT\",\n  \"noOfTrucks\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/load",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["load"]
+						}
+					}
+				},
+				{
+					"name": "1. Create Bid for Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set('bookingBidId', jsonData.bidId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loadId\": {{bookingLoadId}},\n  \"transporterId\": {{transporterId}},\n  \"proposedRate\": 55000.0,\n  \"trucksOffered\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/bid",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["bid"]
+						}
+					}
+				},
+				{
+					"name": "2. Create Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response has bookingId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.bookingId).to.exist;",
+									"    pm.environment.set('bookingId', jsonData.bookingId);",
+									"});",
+									"pm.test('Status is CONFIRMED', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('CONFIRMED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bidId\": {{bookingBidId}},\n  \"allocatedTrucks\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["booking"]
+						}
+					}
+				},
+				{
+					"name": "3. Get Booking by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response has bookingId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.bookingId).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/booking/{{bookingId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["booking", "{{bookingId}}"]
+						}
+					}
+				},
+				{
+					"name": "4. Get All Bookings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response is array', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["booking"]
+						}
+					}
+				},
+				{
+					"name": "5. Cancel Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Status is CANCELLED', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('CANCELLED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/booking/{{bookingId}}/cancel",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["booking", "{{bookingId}}", "cancel"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -17,7 +17,6 @@ public class TransporterRequest {
     @Size(min = 1, message = "At least one truck type required")
     private List<TruckCapacityDTO> availableTrucks;
 
-    // Getters and Setters
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String companyName) { this.companyName = companyName; }
 

@@ -30,10 +30,8 @@ public class Transporter {
     @OneToMany(mappedBy = "transporter", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<TruckCapacity> availableTrucks = new ArrayList<>();
 
-    // Constructors
     public Transporter() {}
 
-    // Getters and Setters
     public Integer getTransporterId() { return transporterId; }
     public void setTransporterId(Integer transporterId) { this.transporterId = transporterId; }
 

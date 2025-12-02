@@ -12,7 +12,6 @@ public class BookingRequest {
     @Min(value = 1, message = "At least 1 truck must be allocated")
     private Integer allocatedTrucks;
 
-    // Getters and Setters
     public Integer getBidId() { return bidId; }
     public void setBidId(Integer bidId) { this.bidId = bidId; }
 

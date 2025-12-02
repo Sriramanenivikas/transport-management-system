@@ -32,7 +32,6 @@ public class BidService {
 
     @Transactional
     public BidResponse createBid(BidRequest request) {
-        // Validate load exists and is biddable
         Load load = loadRepository.findById(request.getLoadId())
                 .orElseThrow(() -> new ResourceNotFoundException("Load not found with ID: " + request.getLoadId()));
 
@@ -40,11 +39,9 @@ public class BidService {
             throw new InvalidStatusTransitionException("Cannot bid on a load with status: " + load.getStatus());
         }
 
-        // Validate transporter exists
         Transporter transporter = transporterRepository.findById(request.getTransporterId())
                 .orElseThrow(() -> new ResourceNotFoundException("Transporter not found with ID: " + request.getTransporterId()));
 
-        // Validate truck capacity
         TruckCapacity capacity = truckCapacityRepository
                 .findByTransporterTransporterIdAndTruckType(request.getTransporterId(), load.getTruckType())
                 .orElseThrow(() -> new InsufficientCapacityException(
@@ -56,7 +53,6 @@ public class BidService {
                             capacity.getCount(), request.getTrucksOffered()));
         }
 
-        // Create bid
         Bid bid = new Bid();
         bid.setLoadId(request.getLoadId());
         bid.setTransporterId(request.getTransporterId());
@@ -66,7 +62,6 @@ public class BidService {
 
         bid = bidRepository.save(bid);
 
-        // Update load status to OPEN_FOR_BIDS if it was POSTED
         if ("POSTED".equals(load.getStatus())) {
             load.setStatus("OPEN_FOR_BIDS");
             loadRepository.save(load);

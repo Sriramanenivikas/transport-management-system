@@ -1,19 +1,10 @@
--- ============================================
--- Transport Management System - Complete Database Setup
--- This file contains schema + comprehensive sample data
--- Run this file to completely reset the database
--- ============================================
 
--- Drop existing tables
 DROP TABLE IF EXISTS bookings CASCADE;
 DROP TABLE IF EXISTS bids CASCADE;
 DROP TABLE IF EXISTS loads CASCADE;
 DROP TABLE IF EXISTS truck_capacity CASCADE;
 DROP TABLE IF EXISTS transporters CASCADE;
 
--- ============================================
--- 1. TRANSPORTERS TABLE
--- ============================================
 CREATE TABLE transporters (
     transporter_id SERIAL PRIMARY KEY,
     company_name VARCHAR(255) NOT NULL,
@@ -22,9 +13,6 @@ CREATE TABLE transporters (
     version INTEGER DEFAULT 0
 );
 
--- ============================================
--- 2. TRUCK CAPACITY TABLE
--- ============================================
 CREATE TABLE truck_capacity (
     id SERIAL PRIMARY KEY,
     transporter_id INTEGER NOT NULL,
@@ -35,9 +23,6 @@ CREATE TABLE truck_capacity (
     UNIQUE(transporter_id, truck_type)
 );
 
--- ============================================
--- 3. LOADS TABLE
--- ============================================
 CREATE TABLE loads (
     load_id SERIAL PRIMARY KEY,
     shipper_id VARCHAR(100) NOT NULL,
@@ -58,9 +43,6 @@ CREATE INDEX idx_loads_shipper ON loads(shipper_id);
 CREATE INDEX idx_loads_status ON loads(status);
 CREATE INDEX idx_loads_loading_date ON loads(loading_date);
 
--- ============================================
--- 4. BIDS TABLE
--- ============================================
 CREATE TABLE bids (
     bid_id SERIAL PRIMARY KEY,
     load_id INTEGER NOT NULL,
@@ -76,12 +58,7 @@ CREATE TABLE bids (
 CREATE INDEX idx_bids_load ON bids(load_id);
 CREATE INDEX idx_bids_transporter ON bids(transporter_id);
 CREATE INDEX idx_bids_status ON bids(status);
--- Note: Removed unique constraint on accepted bids to support multi-truck allocation
--- Multiple bids can be accepted for a single load when partial truck allocation is needed
 
--- ============================================
--- 5. BOOKINGS TABLE
--- ============================================
 CREATE TABLE bookings (
     booking_id SERIAL PRIMARY KEY,
     load_id INTEGER NOT NULL,
@@ -100,13 +77,6 @@ CREATE INDEX idx_bookings_load ON bookings(load_id);
 CREATE INDEX idx_bookings_transporter ON bookings(transporter_id);
 CREATE INDEX idx_bookings_status ON bookings(status);
 
--- ============================================
--- INSERT SAMPLE DATA
--- ============================================
-
--- ============================================
--- TRANSPORTERS (20 companies)
--- ============================================
 INSERT INTO transporters (company_name, rating) VALUES
 ('VRL Logistics Ltd', 4.7),
 ('Blue Dart Express', 4.9),
@@ -129,105 +99,77 @@ INSERT INTO transporters (company_name, rating) VALUES
 ('Aegis Logistics', 4.5),
 ('Transport Corporation of India', 4.7);
 
--- ============================================
--- TRUCK CAPACITY (Multiple truck types per transporter)
--- ============================================
 INSERT INTO truck_capacity (transporter_id, truck_type, count) VALUES
--- VRL Logistics (ID: 1)
 (1, 'TATA-407', 45),
 (1, 'CONTAINER-20FT', 35),
 (1, 'CONTAINER-40FT', 25),
 (1, 'FLATBED-TRAILER', 15),
 (1, 'CLOSED-BODY', 20),
--- Blue Dart Express (ID: 2)
 (2, 'TATA-407', 60),
 (2, 'REFRIGERATED-VAN', 30),
 (2, 'CONTAINER-20FT', 40),
 (2, 'CLOSED-BODY', 25),
--- Delhivery Freight (ID: 3)
 (3, 'CONTAINER-20FT', 50),
 (3, 'CONTAINER-40FT', 40),
 (3, 'FLATBED-TRAILER', 20),
 (3, 'TATA-407', 35),
--- Mahindra Logistics (ID: 4)
 (4, 'CONTAINER-40FT', 45),
 (4, 'FLATBED-TRAILER', 30),
 (4, 'REFRIGERATED-VAN', 20),
 (4, 'TANKER', 15),
 (4, 'CLOSED-BODY', 25),
--- Safexpress (ID: 5)
 (5, 'TATA-407', 40),
 (5, 'CONTAINER-20FT', 30),
 (5, 'CONTAINER-40FT', 20),
 (5, 'REFRIGERATED-VAN', 15),
--- XpressBees (ID: 6)
 (6, 'TATA-407', 70),
 (6, 'CONTAINER-20FT', 30),
 (6, 'CLOSED-BODY', 25),
--- Ecom Express (ID: 7)
 (7, 'TATA-407', 80),
 (7, 'CONTAINER-20FT', 25),
 (7, 'CLOSED-BODY', 30),
--- Shadowfax (ID: 8)
 (8, 'TATA-407', 55),
 (8, 'REFRIGERATED-VAN', 20),
 (8, 'CONTAINER-20FT', 25),
--- DHL Supply Chain (ID: 9)
 (9, 'CONTAINER-20FT', 60),
 (9, 'CONTAINER-40FT', 50),
 (9, 'REFRIGERATED-VAN', 30),
 (9, 'FLATBED-TRAILER', 25),
--- FedEx India (ID: 10)
 (10, 'CONTAINER-20FT', 65),
 (10, 'CONTAINER-40FT', 55),
 (10, 'CLOSED-BODY', 35),
--- Rivigo (ID: 11)
 (11, 'CONTAINER-20FT', 70),
 (11, 'CONTAINER-40FT', 60),
 (11, 'FLATBED-TRAILER', 30),
--- BlackBuck (ID: 12)
 (12, 'TATA-407', 100),
 (12, 'CONTAINER-20FT', 80),
 (12, 'CONTAINER-40FT', 60),
 (12, 'FLATBED-TRAILER', 40),
--- Porter (ID: 13)
 (13, 'TATA-407', 120),
 (13, 'CONTAINER-20FT', 35),
--- Gati-KWE (ID: 14)
 (14, 'CONTAINER-20FT', 45),
 (14, 'CONTAINER-40FT', 35),
 (14, 'TATA-407', 50),
--- DTDC Express (ID: 15)
 (15, 'TATA-407', 55),
 (15, 'CONTAINER-20FT', 30),
 (15, 'CLOSED-BODY', 25),
--- TCI Freight (ID: 16)
 (16, 'CONTAINER-40FT', 70),
 (16, 'FLATBED-TRAILER', 50),
 (16, 'TANKER', 25),
--- Agarwal Packers (ID: 17)
 (17, 'CONTAINER-20FT', 40),
 (17, 'CLOSED-BODY', 35),
 (17, 'TATA-407', 45),
--- All Cargo (ID: 18)
 (18, 'CONTAINER-20FT', 55),
 (18, 'CONTAINER-40FT', 45),
 (18, 'REFRIGERATED-VAN', 25),
--- Aegis Logistics (ID: 19)
 (19, 'TANKER', 40),
 (19, 'CONTAINER-40FT', 30),
 (19, 'FLATBED-TRAILER', 20),
--- TCI (ID: 20)
 (20, 'CONTAINER-20FT', 60),
 (20, 'CONTAINER-40FT', 50),
 (20, 'TATA-407', 40),
 (20, 'REFRIGERATED-VAN', 30);
 
--- ============================================
--- LOADS (50 loads with various statuses)
--- ============================================
-
--- POSTED Loads (15)
 INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, product_type, weight, weight_unit, truck_type, no_of_trucks, status) VALUES
 ('SHIP001', 'Mumbai', 'Delhi', '2025-12-05 08:00:00', 'Electronics', 5000.00, 'KG', 'CONTAINER-20FT', 2, 'POSTED'),
 ('SHIP002', 'Bangalore', 'Chennai', '2025-12-06 09:00:00', 'Textiles', 8.50, 'TON', 'CONTAINER-40FT', 3, 'POSTED'),
@@ -245,7 +187,6 @@ INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, produ
 ('SHIP014', 'Indore', 'Delhi', '2025-12-18 09:30:00', 'Furniture', 4000.00, 'KG', 'CLOSED-BODY', 2, 'POSTED'),
 ('SHIP015', 'Lucknow', 'Varanasi', '2025-12-19 08:00:00', 'Agricultural Produce', 10.00, 'TON', 'CONTAINER-20FT', 2, 'POSTED');
 
--- OPEN_FOR_BIDS Loads (20)
 INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, product_type, weight, weight_unit, truck_type, no_of_trucks, status) VALUES
 ('SHIP016', 'Mumbai', 'Pune', '2025-12-03 11:00:00', 'Consumer Electronics', 4500.00, 'KG', 'CONTAINER-20FT', 1, 'OPEN_FOR_BIDS'),
 ('SHIP017', 'Delhi', 'Chandigarh', '2025-12-04 06:00:00', 'Food Grains', 15.00, 'TON', 'CONTAINER-40FT', 3, 'OPEN_FOR_BIDS'),
@@ -268,7 +209,6 @@ INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, produ
 ('SHIP034', 'Varanasi', 'Allahabad', '2025-12-21 08:00:00', 'Handicrafts', 900.00, 'KG', 'TATA-407', 1, 'OPEN_FOR_BIDS'),
 ('SHIP035', 'Guwahati', 'Shillong', '2025-12-22 07:30:00', 'Tea Chests', 5.00, 'TON', 'CONTAINER-20FT', 1, 'OPEN_FOR_BIDS');
 
--- BOOKED Loads (10)
 INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, product_type, weight, weight_unit, truck_type, no_of_trucks, status) VALUES
 ('SHIP036', 'Mumbai', 'Ahmedabad', '2025-11-25 08:00:00', 'Cotton Bales', 20.00, 'TON', 'CONTAINER-40FT', 4, 'BOOKED'),
 ('SHIP037', 'Chennai', 'Bangalore', '2025-11-26 09:00:00', 'IT Equipment', 3000.00, 'KG', 'CONTAINER-20FT', 1, 'BOOKED'),
@@ -281,7 +221,6 @@ INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, produ
 ('SHIP044', 'Ahmedabad', 'Surat', '2025-12-03 07:30:00', 'Chemicals', 10.00, 'TON', 'TANKER', 2, 'BOOKED'),
 ('SHIP045', 'Bangalore', 'Hubli', '2025-12-04 08:30:00', 'Electronics', 4200.00, 'KG', 'CONTAINER-20FT', 2, 'BOOKED');
 
--- CANCELLED Loads (5)
 INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, product_type, weight, weight_unit, truck_type, no_of_trucks, status) VALUES
 ('SHIP046', 'Bhopal', 'Raipur', '2025-11-20 07:00:00', 'Fertilizers', 30.00, 'TON', 'CONTAINER-40FT', 6, 'CANCELLED'),
 ('SHIP047', 'Kochi', 'Trivandrum', '2025-11-21 06:00:00', 'Spices', 800.00, 'KG', 'TATA-407', 1, 'CANCELLED'),
@@ -289,208 +228,79 @@ INSERT INTO loads (shipper_id, loading_city, unloading_city, loading_date, produ
 ('SHIP049', 'Chandigarh', 'Shimla', '2025-11-23 07:00:00', 'Building Materials', 12.00, 'TON', 'FLATBED-TRAILER', 3, 'CANCELLED'),
 ('SHIP050', 'Visakhapatnam', 'Chennai', '2025-11-24 09:00:00', 'Steel Products', 28.00, 'TON', 'FLATBED-TRAILER', 6, 'CANCELLED');
 
--- ============================================
--- BIDS (80+ bids for OPEN_FOR_BIDS and BOOKED loads)
--- ============================================
-
--- Bids for Load 16 (Mumbai to Pune - Electronics) - OPEN_FOR_BIDS
 INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
 (16, 1, 25000.00, 1, 'PENDING'),
 (16, 2, 23500.00, 1, 'PENDING'),
-(16, 5, 24000.00, 1, 'PENDING');
-
--- Bids for Load 17 (Delhi to Chandigarh - Food Grains) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(16, 5, 24000.00, 1, 'PENDING'),
 (17, 3, 85000.00, 3, 'PENDING'),
 (17, 4, 82000.00, 3, 'PENDING'),
-(17, 9, 88000.00, 3, 'PENDING');
-
--- Bids for Load 18 (Bangalore to Mysore - Furniture) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(17, 9, 88000.00, 3, 'PENDING'),
 (18, 1, 12000.00, 1, 'PENDING'),
-(18, 6, 11500.00, 1, 'PENDING');
-
--- Bids for Load 19 (Kolkata to Patna - Paper Products) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(18, 6, 11500.00, 1, 'PENDING'),
 (19, 11, 45000.00, 2, 'PENDING'),
-(19, 14, 42000.00, 2, 'PENDING');
-
--- Bids for Load 20 (Chennai to Coimbatore - Dairy) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(19, 14, 42000.00, 2, 'PENDING'),
 (20, 2, 18000.00, 1, 'PENDING'),
-(20, 8, 17500.00, 1, 'PENDING');
-
--- Bids for Load 21 (Hyderabad to Visakhapatnam) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(20, 8, 17500.00, 1, 'PENDING'),
 (21, 3, 28000.00, 1, 'PENDING'),
-(21, 9, 26500.00, 1, 'PENDING');
-
--- Bids for Load 22 (Pune to Nashik) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(21, 9, 26500.00, 1, 'PENDING'),
 (22, 1, 35000.00, 2, 'PENDING'),
-(22, 10, 33000.00, 2, 'PENDING');
-
--- Bids for Load 23 (Ahmedabad to Rajkot) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(22, 10, 33000.00, 2, 'PENDING'),
 (23, 5, 42000.00, 2, 'PENDING'),
-(23, 14, 40000.00, 2, 'PENDING');
-
--- Bids for Load 24 (Surat to Mumbai) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(23, 14, 40000.00, 2, 'PENDING'),
 (24, 6, 15000.00, 1, 'PENDING'),
-(24, 13, 14500.00, 1, 'PENDING');
-
--- Bids for Load 25 (Jaipur to Delhi - Marble) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(24, 13, 14500.00, 1, 'PENDING'),
 (25, 11, 120000.00, 4, 'PENDING'),
-(25, 16, 115000.00, 4, 'PENDING');
-
--- Bids for Load 26 (Lucknow to Kanpur) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(25, 16, 115000.00, 4, 'PENDING'),
 (26, 1, 11000.00, 1, 'PENDING'),
-(26, 13, 10500.00, 1, 'PENDING');
-
--- Bids for Load 27 (Nagpur to Raipur - Coal) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(26, 13, 10500.00, 1, 'PENDING'),
 (27, 4, 210000.00, 7, 'PENDING'),
-(27, 11, 205000.00, 7, 'PENDING');
-
--- Bids for Load 28 (Bhopal to Indore) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(27, 11, 205000.00, 7, 'PENDING'),
 (28, 3, 38000.00, 2, 'PENDING'),
-(28, 14, 36000.00, 2, 'PENDING');
-
--- Bids for Load 29 (Chandigarh to Amritsar) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(28, 14, 36000.00, 2, 'PENDING'),
 (29, 9, 72000.00, 2, 'PENDING'),
-(29, 10, 70000.00, 2, 'PENDING');
-
--- Bids for Load 30 (Kochi to Trivandrum - Seafood) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(29, 10, 70000.00, 2, 'PENDING'),
 (30, 2, 16000.00, 1, 'PENDING'),
-(30, 18, 15500.00, 1, 'PENDING');
-
--- Bids for Load 31 (Coimbatore to Madurai) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(30, 18, 15500.00, 1, 'PENDING'),
 (31, 3, 44000.00, 2, 'PENDING'),
-(31, 14, 42500.00, 2, 'PENDING');
-
--- Bids for Load 32 (Visakhapatnam to Vijayawada - Steel) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(31, 14, 42500.00, 2, 'PENDING'),
 (32, 11, 155000.00, 5, 'PENDING'),
-(32, 16, 150000.00, 5, 'PENDING');
-
--- Bids for Load 33 (Indore to Bhopal) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(32, 16, 150000.00, 5, 'PENDING'),
 (33, 5, 36000.00, 2, 'PENDING'),
-(33, 14, 34500.00, 2, 'PENDING');
-
--- Bids for Load 34 (Varanasi to Allahabad) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(33, 14, 34500.00, 2, 'PENDING'),
 (34, 6, 9500.00, 1, 'PENDING'),
-(34, 13, 9000.00, 1, 'PENDING');
-
--- Bids for Load 35 (Guwahati to Shillong) - OPEN_FOR_BIDS
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(34, 13, 9000.00, 1, 'PENDING'),
 (35, 3, 48000.00, 1, 'PENDING'),
-(35, 14, 46000.00, 1, 'PENDING');
-
--- ============================================
--- ACCEPTED BIDS (for BOOKED loads)
--- ============================================
-
--- For Load 36 (Mumbai to Ahmedabad - Cotton)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(35, 14, 46000.00, 1, 'PENDING'),
 (36, 3, 120000.00, 4, 'ACCEPTED'),
-(36, 4, 125000.00, 4, 'REJECTED');
-
--- For Load 37 (Chennai to Bangalore - IT Equipment)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(36, 4, 125000.00, 4, 'REJECTED'),
 (37, 5, 28000.00, 1, 'ACCEPTED'),
-(37, 9, 29000.00, 1, 'REJECTED');
-
--- For Load 38 (Delhi to Agra - Marble)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(37, 9, 29000.00, 1, 'REJECTED'),
 (38, 11, 210000.00, 7, 'ACCEPTED'),
-(38, 16, 215000.00, 7, 'REJECTED');
-
--- For Load 39 (Kolkata to Guwahati - Tea)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(38, 16, 215000.00, 7, 'REJECTED'),
 (39, 14, 55000.00, 2, 'ACCEPTED'),
-(39, 3, 57000.00, 2, 'REJECTED');
-
--- For Load 40 (Pune to Nashik - Wine)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(39, 3, 57000.00, 2, 'REJECTED'),
 (40, 2, 15000.00, 1, 'ACCEPTED'),
-(40, 18, 16000.00, 1, 'REJECTED');
-
--- For Load 41 (Hyderabad to Vijayawada - Cement)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(40, 18, 16000.00, 1, 'REJECTED'),
 (41, 4, 150000.00, 5, 'ACCEPTED'),
-(41, 11, 155000.00, 5, 'REJECTED');
-
--- For Load 42 (Jaipur to Delhi - Handicrafts)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(41, 11, 155000.00, 5, 'REJECTED'),
 (42, 1, 8500.00, 1, 'ACCEPTED'),
-(42, 13, 9000.00, 1, 'REJECTED');
-
--- For Load 43 (Lucknow to Kanpur - Electrical)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(42, 13, 9000.00, 1, 'REJECTED'),
 (43, 5, 22000.00, 1, 'ACCEPTED'),
-(43, 14, 23000.00, 1, 'REJECTED');
-
--- For Load 44 (Ahmedabad to Surat - Chemicals)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(43, 14, 23000.00, 1, 'REJECTED'),
 (44, 19, 75000.00, 2, 'ACCEPTED'),
-(44, 16, 78000.00, 2, 'REJECTED');
-
--- For Load 45 (Bangalore to Hubli - Electronics)
-INSERT INTO bids (load_id, transporter_id, proposed_rate, trucks_offered, status) VALUES
+(44, 16, 78000.00, 2, 'REJECTED'),
 (45, 9, 52000.00, 2, 'ACCEPTED'),
 (45, 10, 54000.00, 2, 'REJECTED');
 
--- ============================================
--- BOOKINGS (10 confirmed bookings)
--- ============================================
-
 INSERT INTO bookings (load_id, bid_id, transporter_id, allocated_trucks, final_rate, status) VALUES
--- Booking for Load 36 (Mumbai to Ahmedabad - Cotton)
 (36, 43, 3, 4, 120000.00, 'CONFIRMED'),
-
--- Booking for Load 37 (Chennai to Bangalore - IT Equipment)
 (37, 45, 5, 1, 28000.00, 'COMPLETED'),
-
--- Booking for Load 38 (Delhi to Agra - Marble)
 (38, 47, 11, 7, 210000.00, 'CONFIRMED'),
-
--- Booking for Load 39 (Kolkata to Guwahati - Tea)
 (39, 49, 14, 2, 55000.00, 'COMPLETED'),
-
--- Booking for Load 40 (Pune to Nashik - Wine)
 (40, 51, 2, 1, 15000.00, 'CONFIRMED'),
-
--- Booking for Load 41 (Hyderabad to Vijayawada - Cement)
 (41, 53, 4, 5, 150000.00, 'CONFIRMED'),
-
--- Booking for Load 42 (Jaipur to Delhi - Handicrafts)
 (42, 55, 1, 1, 8500.00, 'COMPLETED'),
-
--- Booking for Load 43 (Lucknow to Kanpur - Electrical)
 (43, 57, 5, 1, 22000.00, 'CONFIRMED'),
-
--- Booking for Load 44 (Ahmedabad to Surat - Chemicals)
 (44, 59, 19, 2, 75000.00, 'CONFIRMED'),
-
--- Booking for Load 45 (Bangalore to Hubli - Electronics)
 (45, 61, 9, 2, 52000.00, 'CONFIRMED');
-
--- ============================================
--- DATABASE SETUP COMPLETE
--- ============================================
--- Total Transporters: 20
--- Total Truck Capacity Records: 85+
--- Total Loads: 50 (15 Posted, 20 Open for Bids, 10 Booked, 5 Cancelled)
--- Total Bids: 70+
--- Total Bookings: 10
--- ============================================
 

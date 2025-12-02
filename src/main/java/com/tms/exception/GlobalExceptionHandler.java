@@ -92,7 +92,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
-    // Error Response DTO
     public static class ErrorResponse {
         private int status;
         private String message;

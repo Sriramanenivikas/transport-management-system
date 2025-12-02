@@ -68,7 +68,6 @@ public class LoadService {
 
         LoadResponse response = toLoadResponse(load);
 
-        // Get active bids
         List<Bid> bids = bidRepository.findByLoadIdAndStatus(loadId, "PENDING");
         response.setBids(bids.stream().map(this::toBidResponse).collect(Collectors.toList()));
 
@@ -99,7 +98,6 @@ public class LoadService {
         return bids.stream()
                 .map(bid -> {
                     BidResponse response = toBidResponse(bid);
-                    // Calculate score: (1 / proposedRate) * 0.7 + (rating / 5) * 0.3
                     Transporter transporter = transporterRepository.findById(bid.getTransporterId()).orElse(null);
                     if (transporter != null) {
                         double rateScore = (1.0 / bid.getProposedRate()) * 0.7;
@@ -128,7 +126,6 @@ public class LoadService {
         response.setStatus(load.getStatus());
         response.setDatePosted(load.getDatePosted());
 
-        // Calculate remaining trucks
         Integer allocated = bookingRepository.getTotalAllocatedTrucks(load.getLoadId());
         response.setRemainingTrucks(load.getNoOfTrucks() - (allocated != null ? allocated : 0));
 
@@ -145,7 +142,6 @@ public class LoadService {
         response.setStatus(bid.getStatus());
         response.setSubmittedAt(bid.getSubmittedAt());
 
-        // Get transporter name
         transporterRepository.findById(bid.getTransporterId()).ifPresent(t ->
             response.setTransporterCompanyName(t.getCompanyName())
         );

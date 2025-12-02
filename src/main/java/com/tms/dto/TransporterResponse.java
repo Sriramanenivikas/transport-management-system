@@ -9,7 +9,6 @@ public class TransporterResponse {
     private Double rating;
     private List<TruckInfo> availableTrucks;
 
-    // Getters and Setters
     public Integer getTransporterId() { return transporterId; }
     public void setTransporterId(Integer transporterId) { this.transporterId = transporterId; }
 
