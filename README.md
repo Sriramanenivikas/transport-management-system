@@ -22,12 +22,12 @@ A comprehensive backend system for managing transport logistics with Load, Trans
 | Maven | 3.9+ |
 | OpenAPI/Swagger | 2.3.0 |
 
-## 📊 Database Schema
-<img width="980" height="558" alt="2025-12-02_16-55-34" src="https://github.com/user-attachments/assets/df458525-df5d-417d-aeff-4014960395be" />
+ 
 
 ### Entity Relationship Diagram
-```
 <img width="980" height="558" alt="2025-12-02_16-55-34" src="https://github.com/user-attachments/assets/63fa301f-1072-4283-951d-4eddbe0c4638" />
+
+```
 
 ### Database Tables DDL
 
