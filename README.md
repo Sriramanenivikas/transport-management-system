@@ -34,10 +34,6 @@ Key constraints:
 - Indexes on shipper_id, status, load_id, transporter_id
 - Version column for optimistic locking
 
-## APIs
-
-**Swagger:** http://localhost:8080/swagger-ui.html
-
 **Postman:** Import `TMS-Postman-Collection.json`
 
 ### Endpoints (15 total)
@@ -72,7 +68,11 @@ POSTED → OPEN_FOR_BIDS → BOOKED
 mvn test
 ```
 
-![Test Results](https://github.com/user-attachments/assets/test-coverage-placeholder)
+![Test Results] 
+<img width="1280" height="832" alt="Screenshot 2025-12-02 at 9 02 30 PM" src="https://github.com/user-attachments/assets/77660992-6639-47ab-867f-b2461f1ba160" />
+<img width="1280" height="832" alt="Screenshot 2025-12-02 at 9 02 36 PM" src="https://github.com/user-attachments/assets/b3a4820d-c428-45d6-a6a6-09c129b81983" />
+
+
 
 43 tests covering:
 - Service layer unit tests
@@ -90,11 +90,3 @@ src/main/java/com/tms/
 ├── dto/            # Request/Response objects
 └── exception/      # Custom exceptions + handler
 ```
-
-## Error Handling
-
-| Status | Exception |
-|--------|-----------|
-| 400 | InvalidStatusTransitionException, InsufficientCapacityException |
-| 404 | ResourceNotFoundException |
-| 409 | LoadAlreadyBookedException, OptimisticLockException |
