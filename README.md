@@ -23,6 +23,7 @@ A comprehensive backend system for managing transport logistics with Load, Trans
 | OpenAPI/Swagger | 2.3.0 |
 
 ## 📊 Database Schema
+<img width="980" height="558" alt="2025-12-02_16-55-34" src="https://github.com/user-attachments/assets/df458525-df5d-417d-aeff-4014960395be" />
 
 ### Entity Relationship Diagram
 ```
