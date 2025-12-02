@@ -27,37 +27,7 @@ A comprehensive backend system for managing transport logistics with Load, Trans
 
 ### Entity Relationship Diagram
 ```
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│   TRANSPORTERS  │       │      LOADS      │       │      BIDS       │
-├─────────────────┤       ├─────────────────┤       ├─────────────────┤
-│ transporter_id  │◄──┐   │ load_id (PK)    │◄──────│ bid_id (PK)     │
-│ (PK)            │   │   │ shipper_id      │       │ load_id (FK)    │
-│ company_name    │   │   │ loading_city    │       │ transporter_id  │
-│ rating          │   │   │ unloading_city  │       │ (FK)            │
-│ version         │   │   │ loading_date    │       │ proposed_rate   │
-└────────┬────────┘   │   │ product_type    │       │ trucks_offered  │
-         │            │   │ weight          │       │ status          │
-         │            │   │ weight_unit     │       │ submitted_at    │
-         ▼            │   │ truck_type      │       └─────────────────┘
-┌─────────────────┐   │   │ no_of_trucks    │               │
-│  TRUCK_CAPACITY │   │   │ status          │               │
-├─────────────────┤   │   │ version         │               │
-│ id (PK)         │   │   └─────────────────┘               │
-│ transporter_id  │   │           │                         │
-│ (FK)            │   │           │                         ▼
-│ truck_type      │   │           │                 ┌─────────────────┐
-│ count           │   │           │                 │    BOOKINGS     │
-│ version         │   │           │                 ├─────────────────┤
-└─────────────────┘   │           └────────────────►│ booking_id (PK) │
-                      │                             │ load_id (FK)    │
-                      └─────────────────────────────│ bid_id (FK)     │
-                                                    │ transporter_id  │
-                                                    │ (FK)            │
-                                                    │ allocated_trucks│
-                                                    │ final_rate      │
-                                                    │ status          │
-                                                    └─────────────────┘
-```
+<img width="980" height="558" alt="2025-12-02_16-55-34" src="https://github.com/user-attachments/assets/63fa301f-1072-4283-951d-4eddbe0c4638" />
 
 ### Database Tables DDL
 
@@ -281,12 +251,12 @@ Content-Type: application/json
 
 ## 📋 Business Rules
 
-### Rule 1: Capacity Validation ✅
+### Rule 1: Capacity Validation 
 - Bid: `trucksOffered ≤ availableTrucks` for truck type
 - Booking: Deducts trucks from transporter's capacity
 - Cancel: Restores trucks to available pool
 
-### Rule 2: Load Status Transitions ✅
+### Rule 2: Load Status Transitions 
 ```
 POSTED → OPEN_FOR_BIDS (first bid received)
 OPEN_FOR_BIDS → BOOKED (fully allocated)
@@ -294,17 +264,17 @@ BOOKED → OPEN_FOR_BIDS (booking cancelled)
 Any → CANCELLED (explicit cancellation, if not BOOKED)
 ```
 
-### Rule 3: Multi-Truck Allocation ✅
+### Rule 3: Multi-Truck Allocation 
 - `remainingTrucks = noOfTrucks - SUM(allocatedTrucks)`
 - Multiple bookings allowed until fully allocated
 - Load becomes BOOKED when `remainingTrucks == 0`
 
-### Rule 4: Concurrent Booking Prevention ✅
+### Rule 4: Concurrent Booking Prevention 
 - `@Version` column on Load, Transporter, TruckCapacity
 - First transaction wins on concurrent booking
 - Second fails with `409 Conflict`
 
-### Rule 5: Best Bid Calculation ✅
+### Rule 5: Best Bid Calculation 
 ```
 score = (1 / proposedRate) * 0.7 + (rating / 5) * 0.3
 ```
