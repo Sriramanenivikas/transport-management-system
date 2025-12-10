@@ -5,7 +5,6 @@ com/tms/repository/LoadRepository.class
 com/tms/dto/LoadResponse.class
 com/tms/dto/BidResponse.class
 com/tms/service/TransporterService.class
-com/tms/config/OpenApiConfig.class
 com/tms/exception/GlobalExceptionHandler$ErrorResponse.class
 com/tms/exception/GlobalExceptionHandler.class
 com/tms/repository/TransporterRepository.class
