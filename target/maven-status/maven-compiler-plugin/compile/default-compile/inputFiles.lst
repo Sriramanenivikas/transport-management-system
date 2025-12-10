@@ -5,7 +5,6 @@
 /Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/controller/LoadController.java
 /Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/controller/BookingController.java
 /Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/dto/BidRequest.java
-/Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/config/OpenApiConfig.java
 /Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/service/LoadService.java
 /Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/repository/LoadRepository.java
 /Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/PROJECTS/TMS/transport-management-system/src/main/java/com/tms/repository/BidRepository.java
