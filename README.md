@@ -5,8 +5,8 @@ A Spring Boot backend for managing transport logistics - loads, transporters, bi
 ## Tech Stack
 
 - Java 17, Spring Boot 3.2.0
-- PostgreSQL 14+, Spring Data JPA
-- Maven 3.9+
+- PostgreSQL 14, Spring Data JPA
+- Maven 3.9
 
 ## Quick Start
 
